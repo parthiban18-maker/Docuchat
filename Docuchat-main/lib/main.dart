@@ -71,37 +71,16 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController chatController = TextEditingController();
 
   // ==================================================
-  // BACKEND
+  // BACKEND (same origin — relative paths)
   // ==================================================
   String serverUrl = '';
   bool isServerOnline = false;
   Timer? serverStatusTimer;
-  Future<void> loadServerUrl() async {
-    final response = await http.get(
-      Uri.parse(
-        'https://raw.githubusercontent.com/aslamcsengineer/Docuchat/main/config.json',
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-
-      setState(() {
-        serverUrl = data['backendUrl'];
-      });
-
-      debugPrint('Backend URL loaded: $serverUrl');
-    } else {
-      throw Exception('Failed to load backend URL');
-    }
-  }
 
   Future<void> checkServerStatus() async {
-    if (serverUrl.isEmpty) return;
-
     try {
       final response = await http
-          .get(Uri.parse('$serverUrl/health'))
+          .get(Uri.parse('$serverUrl/api/health'))
           .timeout(const Duration(seconds: 5));
 
       if (!mounted) return;
@@ -122,14 +101,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    loadServerUrl().then((_) {
-      checkServerStatus();
+    // serverUrl stays '' — all API calls use relative paths on the same origin
+    checkServerStatus();
 
-      serverStatusTimer = Timer.periodic(
-        const Duration(seconds: 10),
-        (_) => checkServerStatus(),
-      );
-    });
+    serverStatusTimer = Timer.periodic(
+      const Duration(seconds: 10),
+      (_) => checkServerStatus(),
+    );
   }
 
   @override
@@ -215,7 +193,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     try {
-      final uri = Uri.parse('$serverUrl/upload');
+      final uri = Uri.parse('$serverUrl/api/upload');
 
       print('5. Sending PDF to: $uri');
 
@@ -308,7 +286,7 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final response = await http.post(
-        Uri.parse('$serverUrl/summary'),
+        Uri.parse('$serverUrl/api/summary'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'fileId': openAIFileId}),
       );
@@ -379,7 +357,7 @@ class _HomePageState extends State<HomePage> {
       print('Generating key points...');
 
       final response = await http.post(
-        Uri.parse('$serverUrl/important'),
+        Uri.parse('$serverUrl/api/important'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'fileId': openAIFileId}),
       );
@@ -461,7 +439,7 @@ class _HomePageState extends State<HomePage> {
       print('Sending question: $question');
 
       final response = await http.post(
-        Uri.parse('$serverUrl/chat'),
+        Uri.parse('$serverUrl/api/chat'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'fileId': openAIFileId, 'question': question}),
       );

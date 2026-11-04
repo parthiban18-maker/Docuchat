@@ -1,0 +1,17 @@
+# render.yaml — Render Blueprint for DocuChat
+# https://docs.render.com/blueprint-spec
+
+services:
+  - type: web
+    name: docuchat
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: Docuchat-main/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false  # set manually in dashboard (secret)
+      - key: NODE_ENV
+        value: production

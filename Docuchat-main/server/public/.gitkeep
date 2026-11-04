@@ -1,0 +1,2 @@
+# This directory will hold the compiled Flutter Web production assets.
+# Built automatically via GitHub Actions (.github/workflows/build-flutter-web.yml).

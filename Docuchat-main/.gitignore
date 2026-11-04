@@ -50,7 +50,9 @@ npm-debug.log*
 
 # Secrets
 .env
-.env.*
+.env.local
+.env.production
+!.env.example
 
 # DocuChat temporary/backup files
 server/server_working_backup.js

@@ -1,9 +1,10 @@
 {
-  "name": "server",
+  "name": "docuchat-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "DocuChat backend — PDF AI assistant powered by Google Gemini",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,7 +17,6 @@
     "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "multer": "^2.4.0",
-    "openai": "^7.25.0",
     "pdf-parse": "^2.4.5",
     "uuid": "^14.0.2"
   }
